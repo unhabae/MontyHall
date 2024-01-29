@@ -16,21 +16,40 @@ for (let i = 0; i < doors.length; i++) {
 function klikkdor(event) {
   if (kanTrykke) {
     const door = event.target;
-    door.src = "media/semiclosed.png";
-    setTimeout(opendoor, 800, door);
-    const audio = new Audio("media/goat.mp3");
-    audio.play();
-    kanTrykke = false;
+    let vinner = false
+
+    // la brukeren trykke en eller flere ganger: kanTrykke = false;
 
     // Hvilken dør er dette?
-    const door_index = Array.from(
-      door.parentElement.parentElement.children
-    ).indexOf(door.parentElement);
+    // const door_index = Array.from(      door.parentElement.parentElement.children    ).indexOf(door.parentElement);
+    // Eller ved å bruke data-index property:
+    const door_index = door.parentElement.dataset.index
     console.log("Dør nummer", door_index, "VinnerLuke", vinnerLuke);
-    if (door_index == vinnerLuke) console.log("DU VANT! DU VANT! ");
+    if (door_index == vinnerLuke) {
+      vinner = true
+      document.getElementById("outputText").innerHTML = "DU VANT! DU VANT!" 
+      const prizeBilde = door.parentElement.querySelector(".prize")
+      prizeBilde.src = "media/ferrari.png"
+      prizeBilde.style.width = "80%"
+
+    }
+
+    // Åpne døra "litt"
+    door.src = "media/semiclosed.png";
+    setTimeout(opendoor, 800, door);
+    // Spill lyden med en gang 
+    let audio = null 
+    if (vinner) {
+      audio = new Audio("media/success.mp3");
+    } else {
+      audio = new Audio("media/goat.mp3");
+    }
+    audio.play();
+
   }
 }
 
-function opendoor(door) {
+function opendoor(door, vinner) {
+  // Åpne døra helt
   door.src = "media/open.png";
 }
